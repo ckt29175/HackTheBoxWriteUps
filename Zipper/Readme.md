@@ -186,7 +186,7 @@ Now we have user, it is time to move on to Root. Doing basic enumeration on the 
 In the `/home/zapper/utils` directory before, we see the `zabbix-service` file. So how can we elevate privledges with this file?
 Lets figure out what this file does...
 
-By running the file we see that we are able to 'stop' or 'start' the Zabbix service. From this we can assume that it uses some sort of system binary. By cat the file, we find that the file is using `systemctl`:
+By running the file we see that we are able to 'stop' or 'start' the Zabbix service. From this we can assume that it uses some sort of system binary. By using cat on the file, we find that the file is using `systemctl`:
 ```
 cat zabbix-service
 ... startsystemctl daemon-reload && systemctl start zabbix-agentstopsystemctl ... 
