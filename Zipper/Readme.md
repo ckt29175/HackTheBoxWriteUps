@@ -187,7 +187,10 @@ In the `/home/zapper/utils` directory before, we see the `zabbix-service` file. 
 Lets figure out what this file does...
 
 By running the file we see that we are able to 'stop' or 'start' the Zabbix service. From this we can assume that it uses some sort of system binary. By cat the file, we find that the file is using `systemctl`:
-`... startsystemctl daemon-reload && systemctl start zabbix-agentstopsystemctl ... `
+```
+cat zabbix-service
+... startsystemctl daemon-reload && systemctl start zabbix-agentstopsystemctl ... 
+```
 
 We can escalate to Root by changing the path variable and creating a file named `systemctl` which spawns a shell:
 ```
