@@ -17,11 +17,11 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
  ```
  
  From here, the two major ports to enumerate is `10050` and `80`. Starting at `10050`, it seems that nmap's service enumeration did not find much information on the port.
- By doing a quick Google search, we are able to get a general idea of what the port is used for which is `Zabbix-Agent`:
+ By doing a quick Google search, we are able to get a general idea of what the port is used for, which is `Zabbix-Agent`:
  https://www.speedguide.net/port.php?port=10050
  
  Next, we look at the HTTP service. On the default page of the web server, it is a default Apache2 Ubuntu page.
- Trying to brute force the directory using default Dirb wordlist and seclist's `big.txt` resulted in nothing significant. By using     the information we have gotten on `10050`, the directory `http://10.10.10.108/zabbix` was attempted and found a login page: 
+ Trying to brute force the directory using default Dirb wordlist and seclist's `big.txt` resulted in nothing significant. By using     the information we have gotten on `10050`, the directory `http://10.10.10.108/zabbix` was attempted and a login page was found: 
  
  ![Image](https://i.imgur.com/G7IOBIR.png)
 
