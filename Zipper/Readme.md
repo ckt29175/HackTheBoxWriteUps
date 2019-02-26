@@ -61,7 +61,7 @@ From here, we do some research on Zabbix application itself. We see that in the 
 Zabbix API documentation: https://www.zabbix.com/documentation/3.0/manual/api
 
 We can try authenticating and accessing the application using the API.
-Start by getting the authentication token by sending a HTTP POST request to the API using curl:
+We start by getting the authentication token by sending a HTTP POST request to the API using curl:
 ```
 curl -d '{
     "jsonrpc": "2.0",
