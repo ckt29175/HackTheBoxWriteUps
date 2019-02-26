@@ -132,7 +132,7 @@ We set up a listener on our attacking machine:
 Then we login as a "guest" and execute the script:
 ![Image](https://i.gyazo.com/fb40cffa499fb2a4adc1d6927d0a0f88.png)
 
-#Privledge Escalation (User)
+# Privledge Escalation (User)
 We are a very low privledged user, authenticated as the Zabbix service:
 ```
 $ whoami
@@ -160,7 +160,7 @@ We can try to authenticate to a user using the password we have found, but first
 Viewing the `/etc/passwd` shows a user `zapper` and we are able to authenticate to the user by using the password we have found `ZippityDoDah`:
 ![Image](https://i.gyazo.com/aed65e3fb0ecaa12d31394138356afbe.png)
 
-#Privledge Escalation (Root)
+# Privledge Escalation (Root)
 Now we have user, it is time to move on to Root. Doing basic enumeration on the machine, such as using a privledge escalation script (https://www.rebootuser.com/?p=1758), we see something that is unsual with SUID files:
 ```
 [-] SUID files:
