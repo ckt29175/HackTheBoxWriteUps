@@ -154,7 +154,7 @@ $ cat backup.sh
 ```
 
 The zip file is using a password `ZippityDoDah`.
-We can try to authenticate to a user using the password we have found, but first we need to spawn a tty shell as we are getting `su: must be run from a terminal` by using the command `su`. By enumerating the machine more, we see that python3 is available:
+We can try to authenticate to a user using the password we have found, but first we need to spawn a tty shell as we are getting `su: must be run from a terminal` by using the command `su`. By enumerating the machine more, we see that python3 is available so we use it to spawn a tty shell:
 `python3 -c 'import pty; pty.spawn("/bin/sh")'`
 
 Viewing the `/etc/passwd` shows a user `zapper` and we are able to authenticate to the user by using the password we have found `ZippityDoDah`:
