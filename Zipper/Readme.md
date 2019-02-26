@@ -129,7 +129,7 @@ By doing some enumeration on the machine using the script function, we find that
 We set up a listener on our attacking machine:
 `[root:~]# nc -nvlp 1234`
 
-Then we login as a "guest" and execute the script:
+Then we login as a "guest" and execute the script on Zabbix:
 ![Image](https://i.gyazo.com/fb40cffa499fb2a4adc1d6927d0a0f88.png)
 
 # Privledge Escalation (User)
@@ -161,7 +161,7 @@ Viewing the `/etc/passwd` shows a user `zapper` and we are able to authenticate 
 ![Image](https://i.gyazo.com/aed65e3fb0ecaa12d31394138356afbe.png)
 
 # Privledge Escalation (Root)
-Now we have user, it is time to move on to Root. Doing basic enumeration on the machine, such as using a privledge escalation script (https://www.rebootuser.com/?p=1758), we see something that is unsual with SUID files:
+Now we have user, it is time to move on to Root. Doing basic enumeration on the machine, such as using a privledge escalation script (https://www.rebootuser.com/?p=1758), we see something that is interesting with the SUID files:
 ```
 [-] SUID files:
 -rwsr-sr-x 1 root root 7556 Sep  8 13:05 /home/zapper/utils/zabbix-service
