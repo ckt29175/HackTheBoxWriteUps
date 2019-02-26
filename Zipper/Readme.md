@@ -133,7 +133,7 @@ Then we login as a "guest" and execute the script:
 ![Image](https://i.gyazo.com/fb40cffa499fb2a4adc1d6927d0a0f88.png)
 
 # Privledge Escalation (User)
-We are a very low privledged user, authenticated as the Zabbix service:
+We are now a very low privledged user, authenticated as the Zabbix service:
 ```
 $ whoami
 zabbix
