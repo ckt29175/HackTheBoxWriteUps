@@ -1,6 +1,6 @@
 # Zipper 
 
-This is a write up on the HTB machine, Zipper. I have seen a few different methods people used to obtain the initial user as well as root but this is the method I used.
+This is a write up on the HTB machine, Zipper. I have seen a few different methods people used to obtain the initial user as well as root but this is the method I used. This is so far my favorite HTB box of all time.
 
 
 ## Enumeration
