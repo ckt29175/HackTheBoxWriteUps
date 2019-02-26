@@ -33,7 +33,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 To explain this syntax, we are able to pass a cookie in the header field so CewL scrapes words as the user "guest". The cookie was found by intercepting using Burp when logging in via "guest":
 ![Image](https://i.gyazo.com/0fcc5ac903ffefe902e1a88f45926c1b.png)
 
-In a more time effiecnt approach, we are able to make a wordlist ourselves by finding potential words in the pannel. This makes a smaller wordlist to brute force:
+In a more time effiecnt approach, we are able to make a wordlist ourselves by finding potential words in the application. This makes a smaller wordlist to brute force:
 ```
 zipper
 Zipper
