@@ -23,7 +23,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
  Next, we look at the HTTP service. On the default page of the web server, it is a default Apache2 Ubuntu page.
  Trying to brute force the directory using default Dirb wordlist and seclist's `big.txt` resulted in nothing significant. By using     the information we have gotten on `10050`, the directory `zabbix` was attempted and found a login page: 
  
- ![Image](https://i.imgur.com/G7IOBIR.png 
+ ![Image](https://i.imgur.com/G7IOBIR.png)
 
  Default credentials were attempted on the login pannel, however, none of them were valid. 
  We are able to login as a "guest" user. Using CewL, a wordlist was created.
