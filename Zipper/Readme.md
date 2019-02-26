@@ -60,8 +60,8 @@ We try to login to the GUI pannel, however, we get a `GUI access disabled`.
 From here, we do some research on Zabbix application itself. We see that in the documentation, Zabbix uses an API.
 Zabbix API documentation: https://www.zabbix.com/documentation/3.0/manual/api
 
-We can try authenticating and accessing the application using the account using the API.
-Start by getting the authentication token:
+We can try authenticating and accessing the application using the API.
+Start by getting the authentication token by sending a HTTP POST request to the API using curl:
 ```
 curl -d '{
     "jsonrpc": "2.0",
