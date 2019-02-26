@@ -21,7 +21,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
  https://www.speedguide.net/port.php?port=10050
  
  Next, we look at the HTTP service. On the default page of the web server, it is a default Apache2 Ubuntu page.
- Trying to brute force the directory using default Dirb wordlist and seclist's `big.txt` resulted in nothing significant. By using     the information we have gotten on `10050`, the directory `zabbix` was attempted and found a login page: 
+ Trying to brute force the directory using default Dirb wordlist and seclist's `big.txt` resulted in nothing significant. By using     the information we have gotten on `10050`, the directory `http://10.10.10.108/zabbix` was attempted and found a login page: 
  
  ![Image](https://i.imgur.com/G7IOBIR.png)
 
