@@ -129,7 +129,7 @@ By doing some enumeration on the machine using the script function, we find that
 We set up a listener on our attacking machine:
 `[root:~]# nc -nvlp 1234`
 
-Then we login as a "guest" and execute the script on Zabbix:
+Then we login as a "guest" and execute the script on Zipper:
 ![Image](https://i.gyazo.com/fb40cffa499fb2a4adc1d6927d0a0f88.png)
 
 # Privledge Escalation (User)
