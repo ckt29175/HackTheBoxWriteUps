@@ -204,5 +204,6 @@ start or stop?: start
 ```
 
 And we are root:
+
 ![Image](https://i.gyazo.com/ba7592ed784591b356c81ef85836560a.png)
 
